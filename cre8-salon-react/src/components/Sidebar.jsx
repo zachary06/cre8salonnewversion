@@ -97,7 +97,7 @@ const Sidebar = ({ activeSection, setActiveSection, onLogout, onSwitchMode, isOp
 
       <div className={`sidebar ${isOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-header">
-          <img src="/logo.png" alt="Logo" className="sidebar-logo" />
+          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Logo" className="sidebar-logo" />
           {/* Close button - mobile only */}
           <button className="sidebar-close-btn" onClick={onClose} aria-label="Close menu">
             <X size={20} />

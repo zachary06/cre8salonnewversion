@@ -388,7 +388,7 @@ const CustomerBooking = ({ services, addAppointment, customers, addCustomer, app
         <div className="login-content" style={{ maxWidth: '600px' }}>
           <div className="glass-card cb-card">
           <div className="cb-card-header">
-            <img src="/logo.png" alt="Logo" className="cb-logo" />
+            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="Logo" className="cb-logo" />
           </div>
           {/* Close Button Inside Card */}
           <button className="cb-card-close" onClick={onExit}>
