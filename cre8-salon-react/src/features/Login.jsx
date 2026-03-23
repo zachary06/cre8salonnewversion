@@ -48,7 +48,7 @@ const Login = ({ onLogin, isDarkMode, toggleDarkMode }) => {
         
         <div className="portal-loading-content">
           <div className="portal-logo-pulse">
-            <img src="/logo.png" alt="Logo" className="portal-logo-large" />
+            <img src="logo.png" alt="Logo" className="portal-logo-large" />
           </div>
           
           <div className="portal-status-container">
@@ -73,7 +73,7 @@ const Login = ({ onLogin, isDarkMode, toggleDarkMode }) => {
       </div>
       
       <div className="auth-header-top">
-        <img src="/logo.png" alt="Logo" className="auth-logo-fixed" />
+        <img src="logo.png" alt="Logo" className="auth-logo-fixed" />
       </div>
 
       <button className="login-theme-toggle" onClick={toggleDarkMode}>
