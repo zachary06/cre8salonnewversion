@@ -1,0 +1,55 @@
+.export-card {
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  border-radius: var(--radius-lg);
+  transition: transform 0.2s, box-shadow 0.2s;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+.export-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.export-icon-wrapper {
+  color: var(--primary);
+  background: var(--bg-main);
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-indigo-50 {
+  background-color: var(--primary-light);
+  border-color: var(--primary);
+}
+
+.mx-auto { margin-left: auto; margin-right: auto; }
+.max-w-sm { max-width: 400px; }
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+.btn-secondary {
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-card);
+  border-color: var(--primary);
+  color: var(--primary);
+}

@@ -1,0 +1,461 @@
+.cascal-calendar-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Header */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.cal-toggle-group {
+  display: inline-flex;
+  background: var(--bg-main);
+  border-radius: 999px;
+  padding: 4px;
+}
+
+.cal-toggle-btn {
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 24px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cal-toggle-btn.active {
+  background: #7c3aed;
+  color: white;
+  box-shadow: 0 4px 10px rgb(124 58 237 / 0.2);
+}
+
+.cal-nav-center {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cal-month-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.cal-month-title:hover {
+  background: var(--bg-main);
+}
+
+.month-chevron {
+  color: var(--text-muted);
+  transition: transform 0.3s ease;
+}
+
+.month-chevron.open {
+  transform: rotate(180deg);
+  color: var(--primary);
+}
+
+.month-dropdown-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.month-picker-popover {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.05);
+  padding: 20px;
+  z-index: 1000;
+  width: 280px;
+  animation: slideInUpCentered 0.2s ease-out;
+}
+
+@keyframes slideInUpCentered {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+
+.picker-year-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 4px;
+}
+
+.picker-year-nav span {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+}
+
+.picker-year-nav button {
+  background: var(--bg-main);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.picker-year-nav button:hover {
+  background: var(--border);
+  transform: scale(1.05);
+}
+
+.month-grid-selection {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.month-grid-item {
+  background: transparent;
+  border: none;
+  padding: 10px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.month-grid-item:hover {
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+.month-grid-item.active {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.cal-nav-arrow {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.cal-nav-arrow:hover {
+  background: var(--bg-main);
+}
+
+.cal-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cal-filter-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+}
+
+.cal-add-btn {
+  background: #7c3aed;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgb(124 58 237 / 0.3);
+}
+
+/* Grid Framework */
+.calendar-grid-container {
+  overflow: hidden;
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-days-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 1px solid var(--border);
+}
+
+.cal-day-name {
+  text-align: center;
+  padding: 16px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(5, minmax(140px, auto));
+  flex: 1;
+}
+
+.cal-cell {
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 12px;
+  position: relative;
+}
+
+.cal-cell:nth-child(7n) { border-right: none; }
+.cal-cell:nth-last-child(-n+7) { border-bottom: none; }
+
+.cal-cell.faded .cal-date-number {
+  color: #cbd5e1;
+}
+
+.cal-date-number {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* Event Cards */
+.cal-events-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cal-event-card {
+  border-radius: 6px;
+  padding: 8px;
+  border-left: 3px solid transparent;
+}
+
+.cal-event-card.type-purple {
+  background: rgba(139, 92, 246, 0.1);
+  border-left-color: #8b5cf6;
+}
+.cal-event-card.type-purple .evt-title { color: #a78bfa; }
+.cal-event-card.type-purple .evt-service,
+.cal-event-card.type-purple .evt-time { color: #8b5cf6; }
+
+.cal-event-card.type-pink {
+  background: rgba(236, 72, 153, 0.1);
+  border-left-color: #ec4899;
+}
+.cal-event-card.type-pink .evt-title { color: #f472b6; }
+.cal-event-card.type-pink .evt-service,
+.cal-event-card.type-pink .evt-time { color: #db2777; }
+
+.cal-event-card.type-green {
+  background: rgba(16, 185, 129, 0.1);
+  border-left-color: #10b981;
+}
+.cal-event-card.type-green .evt-title { color: #34d399; }
+.cal-event-card.type-green .evt-service,
+.cal-event-card.type-green .evt-time { color: #10b981; }
+
+.evt-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.evt-service {
+  font-size: 11px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.evt-time {
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.evt-more {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 4px;
+  background: var(--bg-main);
+  border-radius: 6px;
+  margin-top: 2px;
+}
+
+/* Tooltip Popover Overrides */
+.cal-popover {
+  position: absolute;
+  top: 60px;
+  left: 60%;
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 16px;
+  width: 220px;
+  box-shadow: var(--shadow-lg);
+  z-index: 20;
+  border: 1px solid var(--border);
+}
+
+.pop-header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.pop-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0 0 4px 0;
+}
+
+.pop-date {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.pop-clients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pop-client {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pop-client img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.pop-client-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.pc-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.pc-serv {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* Dropdown Menu Styles */
+.dropdown-menu {
+  position: absolute;
+  background: var(--bg-card);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  padding: 8px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding: 8px 12px 4px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.dropdown-item {
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-item svg {
+  flex-shrink: 0;
+}
+
+.dropdown-item:hover, .dropdown-item.active {
+  background: var(--bg-main);
+  color: var(--primary);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 8px;
+}

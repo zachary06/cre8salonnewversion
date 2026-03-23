@@ -1,0 +1,84 @@
+.unified-stat-card {
+  padding: 32px;
+  border-radius: var(--radius-lg);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex !important;
+  align-items: center;
+}
+
+.unified-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.unified-stat-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.unified-stat-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Color Variations */
+.unified-stat-icon.text-primary {
+  color: #4f46e5;
+  background: #eef2ff;
+}
+
+.unified-stat-icon.text-green {
+  color: #10b981;
+  background: #dcfce7;
+}
+
+.unified-stat-icon.text-accent {
+  color: #8b5cf6;
+  background: #f3e8ff;
+}
+
+/* Reports specific slate lavender */
+.unified-stat-icon.text-purple {
+  color: #7c3aed;
+  background: #f5f3ff;
+}
+
+/* Typography */
+.unified-stat-title {
+  color: var(--text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.unified-stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+/* Trend Indicator */
+.unified-stat-trend {
+  font-size: 12px;
+  margin-top: 6px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.trend-up {
+  color: #10b981;
+}
+
+.trend-down {
+  color: #ef4444;
+}
