@@ -242,7 +242,7 @@ const Dashboard = ({ setActiveSection }) => {
                 <span>{timeframe}</span>
                 <ChevronDown size={16} />
               </div>
-              {showTimeframeDropdown && renderDropdown('timeframe', ['Weekly', 'Monthly', 'Yearly'], setTimeframe)}
+              {showTimeframeDropdown && renderDropdown(['Weekly', 'Monthly', 'Yearly'], setTimeframe)}
             </div>
           </div>
           <div style={{ width: '100%', height: 300, position: 'relative', minWidth: 0 }}>
@@ -308,7 +308,7 @@ const Dashboard = ({ setActiveSection }) => {
                 <span>{selectedMonth}</span>
                 <ChevronDown size={12} />
               </div>
-              {showMonthDropdown && renderDropdown('month', MONTHS, setSelectedMonth)}
+              {showMonthDropdown && renderDropdown(MONTHS, setSelectedMonth)}
             </div>
           </div>
           <div className="calendar-strip">
