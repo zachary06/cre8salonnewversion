@@ -1,43 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Plus, MoreHorizontal, Trash2, Edit2, Scissors, ChevronUp, ChevronDown } from 'lucide-react';
+import { getServiceImage } from '../utils/formatters';
 import './Services.css';
 
-// Map service keywords to appropriate salon images
-export const getServiceImage = (serviceName) => {
-  const name = (serviceName || '').toLowerCase();
-  if (name.includes('hair') && (name.includes('cut') || name.includes('trim') || name.includes('style'))) {
-    return 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=400&q=80';
-  }
-  if (name.includes('color') || name.includes('dye') || name.includes('highlight') || name.includes('bleach')) {
-    return 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=400&q=80';
-  }
-  if (name.includes('facial') || name.includes('face') || name.includes('skin') || name.includes('peel')) {
-    return 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=400&q=80';
-  }
-  if (name.includes('massage') || name.includes('relax') || name.includes('spa')) {
-    return 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=80';
-  }
-  if (name.includes('nail') || name.includes('mani') || name.includes('pedi')) {
-    return 'https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=400&q=80';
-  }
-  if (name.includes('wax') || name.includes('threading') || name.includes('brow') || name.includes('eyebrow')) {
-    return 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=400&q=80';
-  }
-  if (name.includes('lash') || name.includes('eyelash') || name.includes('extension')) {
-    return 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=400&q=80';
-  }
-  if (name.includes('makeup') || name.includes('make up') || name.includes('cosmetic')) {
-    return 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=400&q=80';
-  }
-  if (name.includes('treatment') || name.includes('keratin') || name.includes('perm')) {
-    return 'https://images.unsplash.com/photo-1519861531473-9200262188bf?auto=format&fit=crop&w=400&q=80';
-  }
-  if (name.includes('blowout') || name.includes('blow') || name.includes('dry')) {
-    return 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?auto=format&fit=crop&w=400&q=80';
-  }
-  return 'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?auto=format&fit=crop&w=400&q=80';
-};
+// Service image selection moved to utils/formatters.js
+
 
 // Portal dropdown — renders into document.body with fixed positioning
 const ServiceMenuPortal = ({ btnRef, onEdit, onDelete, onClose }) => {
@@ -86,16 +54,22 @@ const Services = ({ services, setServices, searchTerm }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const serviceData = {
-      id: editingService ? editingService.id : Date.now(),
-      name: formData.name,
-      price: parseFloat(formData.price),
-      active: formData.active,
-    };
     if (editingService) {
+      const serviceData = {
+        id: editingService.id,
+        name: formData.name,
+        price: parseFloat(formData.price),
+        active: formData.active,
+      };
       setServices(services.map(s => s.id === editingService.id ? serviceData : s));
     } else {
-      setServices([...services, serviceData]);
+      const serviceData = {
+        id: Date.now(),
+        name: formData.name,
+        price: parseFloat(formData.price),
+        active: formData.active,
+      };
+      setServices(prev => [...prev, serviceData]);
     }
     handleCloseModal();
   };
@@ -202,25 +176,31 @@ const Services = ({ services, setServices, searchTerm }) => {
             <h2>{editingService ? 'Edit Service' : 'Add New Service'}</h2>
             <form onSubmit={handleSubmit} className="mt-24">
               <div className="form-group">
-                <label>Service Name</label>
+                <label htmlFor="service-name">Service Name</label>
                 <input
+                  id="service-name"
+                  name="service-name"
                   type="text"
                   required
                   placeholder="e.g. Hair Coloring, Facial..."
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  autoComplete="off"
                 />
               </div>
               <div className="form-group">
-                <label>Price (₱ )</label>
+                <label htmlFor="service-price">Price (₱ )</label>
                 <div className="custom-number-wrapper">
                   <input
+                    id="service-price"
+                    name="service-price"
                     type="number"
                     step="0.01"
                     min="0"
                     required
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    autoComplete="off"
                   />
                   <div className="number-controls">
                     <button 
@@ -249,13 +229,15 @@ const Services = ({ services, setServices, searchTerm }) => {
               {editingService && (
                 <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', cursor: 'pointer' }} onClick={() => setFormData({ ...formData, active: !formData.active })}>
                   <input
+                    id="service-active"
+                    name="service-active"
                     type="checkbox"
                     checked={formData.active}
                     onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
                     style={{ width: 'auto', cursor: 'pointer', transform: 'scale(1.2)' }}
                     onClick={(e) => e.stopPropagation()}
                   />
-                  <label style={{ margin: 0, cursor: 'pointer' }}>Service is Active (visible to customers)</label>
+                  <label htmlFor="service-active" style={{ margin: 0, cursor: 'pointer' }}>Service is Active (visible to customers)</label>
                 </div>
               )}
               <div className="modal-actions mt-32">

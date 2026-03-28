@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Mail, Lock, User, Eye, EyeOff, Sun, Moon, Loader2 } from 'lucide-react';
 import './Login.css';
 
@@ -147,24 +147,30 @@ const Login = ({ onLogin, isDarkMode, toggleDarkMode }) => {
                     onSubmit={handleSubmit}
                   >
                     <div className="input-group">
-                      <label className="input-label">Email Address</label>
+                      <label className="input-label" htmlFor="login-email">Email Address</label>
                       <input
                         type="email"
+                        id="login-email"
+                        name="email"
                         placeholder="Enter your email"
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        autoComplete="email"
                       />
                     </div>
 
                     <div className="input-group">
-                      <label className="input-label">Password</label>
+                      <label className="input-label" htmlFor="login-password">Password</label>
                       <input
                         type={showPassword ? 'text' : 'password'}
+                        id="login-password"
+                        name="password"
                         placeholder="Enter your password"
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        autoComplete="current-password"
                       />
                       <button
                         type="button"
@@ -177,9 +183,11 @@ const Login = ({ onLogin, isDarkMode, toggleDarkMode }) => {
                     </div>
 
                     <div className="form-options">
-                      <label className="checkbox-container">
+                      <label className="checkbox-container" htmlFor="login-remember">
                         <input
                           type="checkbox"
+                          id="login-remember"
+                          name="remember"
                           checked={keepLoggedIn}
                           onChange={(e) => setKeepLoggedIn(e.target.checked)}
                         />
@@ -200,35 +208,44 @@ const Login = ({ onLogin, isDarkMode, toggleDarkMode }) => {
                     onSubmit={handleSubmit}
                   >
                     <div className="input-group">
-                      <label className="input-label">Full Name</label>
+                      <label className="input-label" htmlFor="register-name">Full Name</label>
                       <input
                         type="text"
+                        id="register-name"
+                        name="name"
                         placeholder="Enter your full name"
                         required
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                        autoComplete="name"
                       />
                     </div>
 
                     <div className="input-group">
-                      <label className="input-label">Email Address</label>
+                      <label className="input-label" htmlFor="register-email">Email Address</label>
                       <input
                         type="email"
+                        id="register-email"
+                        name="email"
                         placeholder="Enter your email"
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        autoComplete="email"
                       />
                     </div>
 
                     <div className="input-group">
-                      <label className="input-label">Password</label>
+                      <label className="input-label" htmlFor="register-password">Password</label>
                       <input
                         type={showPassword ? 'text' : 'password'}
+                        id="register-password"
+                        name="password"
                         placeholder="Create a password"
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        autoComplete="new-password"
                       />
                       <button
                         type="button"
@@ -241,13 +258,16 @@ const Login = ({ onLogin, isDarkMode, toggleDarkMode }) => {
                     </div>
 
                     <div className="input-group">
-                      <label className="input-label">Confirm Password</label>
+                      <label className="input-label" htmlFor="register-confirm-password">Confirm Password</label>
                       <input
                         type={showConfirmPassword ? 'text' : 'password'}
+                        id="register-confirm-password"
+                        name="confirmPassword"
                         placeholder="Confirm your password"
                         required
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
+                        autoComplete="new-password"
                       />
                       <button
                         type="button"

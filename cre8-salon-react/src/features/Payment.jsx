@@ -3,9 +3,9 @@ import { CreditCard, History, CheckCircle2, Receipt, AlertCircle, ShoppingBag, M
 import { formatDate, format12h, getCustomerName, getCustomerPhone } from '../utils/formatters';
 import './Payment.css';
 
-const Payment = ({ appointments, customers, transactions, addTransaction, setActiveSection, loadMockData }) => {
+const Payment = ({ appointments, customers, transactions, addTransaction, loadMockData }) => {
   const [activeTab, setActiveTab] = useState('Pending');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm] = useState('');
   const [detailsAppointment, setDetailsAppointment] = useState(null);
   const [detailsTransaction, setDetailsTransaction] = useState(null);
 
@@ -55,7 +55,7 @@ const Payment = ({ appointments, customers, transactions, addTransaction, setAct
   };
 
   return (
-    <div className="payment-page fade-in">
+    <div className="payment-page">
 
       {/* Top Row: KPIs - matching Reports style */}
       <div className="reports-top-row mb-32">

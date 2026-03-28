@@ -5,7 +5,8 @@ const STORAGE_KEYS = {
   appointments: 'cre8_appointments',
   transactions: 'cre8_transactions',
   archive: 'cre8_archive',
-  services: 'cre8_services'
+  services: 'cre8_services',
+  notifications: 'cre8_notifications'
 };
 
 const DEFAULT_SERVICES = [
@@ -43,6 +44,14 @@ const MOCK_TRANSACTIONS = [
   { id: 3, appointmentId: 98, customerName: 'Jane Cooper', service: 'Pedicure', amount: 30, date: '2026-03-17', time: '15:30' }
 ];
 
+const MOCK_NOTIFICATIONS = [
+  { id: 1, title: 'New Appointment', desc: 'Jenny Wilson booked a Haircut', time: '5m ago', read: false, date: '2026-03-25' },
+  { id: 2, title: 'Payment Received', desc: '₱ 80.00 for Facial Treatment', time: '1h ago', read: true, date: '2026-03-25' },
+  { id: 3, title: 'Schedule Update', desc: 'New staff shift assigned', time: '2h ago', read: false, date: '2026-03-25' },
+  { id: 4, title: 'Inventory Alert', desc: 'Shampoo stock is running low', time: '1d ago', read: true, date: '2026-03-24' },
+  { id: 5, title: 'Customer Feedback', desc: 'New 5-star review from Jane', time: '2d ago', read: false, date: '2026-03-23' },
+];
+
 export const useSalonData = () => {
   const [customers, setCustomers] = useState(() => {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.customers) || '[]');
@@ -60,6 +69,10 @@ export const useSalonData = () => {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.services) || '[]');
     return stored.length > 0 ? stored : DEFAULT_SERVICES;
   });
+  const [notifications, setNotifications] = useState(() => {
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEYS.notifications) || '[]');
+    return stored.length > 0 ? stored : MOCK_NOTIFICATIONS;
+  });
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.customers, JSON.stringify(customers));
@@ -76,6 +89,10 @@ export const useSalonData = () => {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.services, JSON.stringify(services));
   }, [services]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.notifications, JSON.stringify(notifications));
+  }, [notifications]);
 
   const addCustomer = useCallback((customer) => setCustomers(prev => [...prev, { ...customer, id: Date.now(), createdAt: new Date().toISOString() }]), []);
   const updateCustomer = useCallback((id, updated) => setCustomers(prev => prev.map(c => c.id === id ? { ...c, ...updated } : c)), []);
@@ -100,6 +117,18 @@ export const useSalonData = () => {
   const updateService = useCallback((id, updated) => setServices(prev => prev.map(s => s.id === id ? { ...s, ...updated } : s)), []);
   const deleteService = useCallback((id) => setServices(prev => prev.filter(s => s.id !== id)), []);
 
+  const markNotificationAsRead = useCallback((id) => {
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+  }, []);
+
+  const markAllNotificationsAsRead = useCallback(() => {
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  }, []);
+
+  const clearNotification = useCallback((id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  }, []);
+
   const contextValue = useMemo(() => ({
     customers,
     appointments,
@@ -116,12 +145,19 @@ export const useSalonData = () => {
     addService,
     updateService,
     deleteService,
+    notifications,
+    setNotifications,
+    markNotificationAsRead,
+    markAllNotificationsAsRead,
+    clearNotification,
     loadMockData
   }), [
-    customers, appointments, transactions, services, 
+    customers, appointments, transactions, services, notifications,
     addCustomer, updateCustomer, deleteCustomer, 
     addAppointment, updateAppointmentStatus, deleteAppointment, 
-    addTransaction, addService, updateService, deleteService, loadMockData
+    addTransaction, addService, updateService, deleteService, 
+    markNotificationAsRead, markAllNotificationsAsRead, clearNotification,
+    loadMockData
   ]);
 
   return contextValue;

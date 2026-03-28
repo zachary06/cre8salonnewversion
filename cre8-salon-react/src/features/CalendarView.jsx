@@ -112,7 +112,7 @@ const CalendarView = () => {
   const currentMonthLabel = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
 
   return (
-    <div className="cascal-calendar-view fade-in">
+    <div className="cascal-calendar-view">
       {/* Header Area */}
       <div className="calendar-header" style={{ position: 'relative', zIndex: 50, display: 'flex', justifyContent: 'space-between' }}>
         <div className="cal-left-placeholder"></div>

@@ -112,7 +112,7 @@ const Customers = ({ customers, addCustomer, updateCustomer, deleteCustomer, loa
 
         {/* Table Body */}
         <div className="members-list-body">
-          {filteredCustomers.map((customer, index) => (
+          {filteredCustomers.map((customer) => (
             <div key={customer.id} className="member-row">
               {/* Added a decorative purple left-border hint on hover directly via CSS based on reference */}
               <div className="col-name member-identity">
@@ -166,34 +166,40 @@ const Customers = ({ customers, addCustomer, updateCustomer, deleteCustomer, loa
             <h2>{editingCustomer ? 'Edit Member' : 'Add New Member'}</h2>
             <form onSubmit={handleSubmit} className="mt-24">
               <div className="form-group">
-                <label>Full Name <span className="required">*</span></label>
+                <label htmlFor="customer-name">Full Name <span className="required">*</span></label>
                 <input 
+                  id="customer-name"
                   name="name"
                   type="text" 
                   placeholder="Your full name"
                   required 
                   value={formData.name}
                   onChange={handleChange}
+                  autoComplete="name"
                 />
               </div>
               <div className="form-group">
-                <label>Email Address <span className="optional">(Optional)</span></label>
+                <label htmlFor="customer-email">Email Address <span className="optional">(Optional)</span></label>
                 <input 
+                  id="customer-email"
                   name="email"
                   type="email" 
                   placeholder="Email address"
                   value={formData.email}
                   onChange={handleChange}
+                  autoComplete="email"
                 />
               </div>
               <div className="form-group">
-                <label>Contact Number <span className="optional">(Optional)</span></label>
+                <label htmlFor="customer-phone">Contact Number <span className="optional">(Optional)</span></label>
                 <input 
+                  id="customer-phone"
                   name="phone"
                   type="tel" 
                   placeholder="Phone number"
                   value={formData.phone}
                   onChange={handleChange}
+                  autoComplete="tel"
                 />
               </div>
               <div className="modal-actions mt-32">

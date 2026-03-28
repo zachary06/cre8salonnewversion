@@ -2,15 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Search, Bell, SlidersHorizontal, User, LogOut, Settings, Sun, Moon, Power, Menu } from 'lucide-react';
 import './Topbar.css';
 
-const notifications = [
-  { id: 1, title: 'New Appointment', desc: 'Jenny Wilson booked a Haircut', time: '5m ago' },
-  { id: 2, title: 'Payment Received', desc: '$80.00 for Facial Treatment', time: '1h ago' },
-  { id: 3, title: 'Schedule Update', desc: 'New staff shift assigned', time: '2h ago' },
-];
-
-const Topbar = ({ user, onSearch, onLogout, isDarkMode, toggleDarkMode, onMenuToggle, activeSection, searchTerm }) => {
+const Topbar = ({ 
+  user, onSearch, onLogout, isDarkMode, toggleDarkMode, onMenuToggle, 
+  activeSection, searchTerm, notifications = [], markAllRead, setActiveSection 
+}) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   useEffect(() => {
     const handleClickOutside = () => {
@@ -77,25 +76,40 @@ const Topbar = ({ user, onSearch, onLogout, isDarkMode, toggleDarkMode, onMenuTo
             }}
           >
             <Bell size={18} />
-            <span className="notification-dot"></span>
+            {unreadCount > 0 && <span className="notification-dot"></span>}
           </button>
           
           {showNotifications && (
-            <div className="dropdown-menu" style={{ top: 'calc(100% + 12px)', right: 0, width: '320px', padding: '16px 0' }} onClick={(e) => e.stopPropagation()}>
-              <div className="dropdown-header px-16 mb-12 flex-between">
-                <h3 className="text-sm font-bold">Notifications</h3>
-                <span className="text-xs text-primary cursor-pointer">Mark all as read</span>
+            <div className="dropdown-menu topbar-dropdown" style={{ right: 0 }} onClick={(e) => e.stopPropagation()}>
+              <div className="dropdown-header">
+                <h3>Notifications</h3>
+                {unreadCount > 0 && (
+                  <span onClick={() => markAllRead && markAllRead()}>Mark all as read</span>
+                )}
               </div>
               <div className="dropdown-list">
-                {notifications.map(n => (
-                  <div key={n.id} className="dropdown-item no-hover-bg" style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)', borderRadius: 0 }}>
-                    <div className="item-content">
-                      <p className="font-bold text-sm mb-2">{n.title}</p>
-                      <p className="text-xs text-muted leading-relaxed line-clamp-2">{n.desc}</p>
-                      <span className="text-xs font-medium text-primary mt-4 block">{n.time}</span>
+                {notifications.length === 0 ? (
+                  <div className="dropdown-item text-center py-24 text-muted">No new notifications</div>
+                ) : (
+                  notifications.slice(0, 5).map(n => (
+                    <div key={n.id} className={`dropdown-item ${!n.read ? 'unread' : ''}`} style={{ borderBottom: '1px solid var(--border)', borderRadius: 0 }}>
+                      <div className="item-content">
+                        <p className="item-title">{n.title}</p>
+                        <p className="item-desc">{n.desc}</p>
+                        <span className="item-time">{n.time}</span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
+              </div>
+              <div 
+                className="dropdown-footer" 
+                onClick={() => {
+                  if (setActiveSection) setActiveSection('notifications');
+                  setShowNotifications(false);
+                }}
+              >
+                View All Notifications
               </div>
             </div>
           )}
@@ -111,19 +125,19 @@ const Topbar = ({ user, onSearch, onLogout, isDarkMode, toggleDarkMode, onMenuTo
               setShowNotifications(false);
             }}
           >
-            <div className="profile-info">
-              <span className="profile-name">{user?.name || 'Administrator'}</span>
-              <span className="profile-role">Staff</span>
+            <div className="topbar-profile-info">
+              <span className="topbar-profile-name">{user?.name || 'Staff'}</span>
+              <span className="topbar-profile-role">Staff</span>
             </div>
-            <div className="profile-avatar">
-              <User size={20} />
+            <div className="topbar-avatar">
+              <User size={18} />
             </div>
           </div>
 
           {showProfileMenu && (
             <div className="dropdown-menu" style={{ top: 'calc(100% + 12px)', right: 0 }} onClick={(e) => e.stopPropagation()}>
               <div className="dropdown-list">
-                <div className="dropdown-item clickable">
+                <div className="dropdown-item clickable" onClick={() => { if (setActiveSection) setActiveSection('profile'); setShowProfileMenu(false); }}>
                   <User size={16} />
                   <span>My Profile</span>
                 </div>

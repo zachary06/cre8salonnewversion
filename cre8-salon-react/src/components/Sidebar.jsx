@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  LayoutDashboard, Users, Calendar, DollarSign, 
-  BarChart3, Scissors, Download, LogOut, UserCircle, ChevronDown, ChevronRight, Power, X
+  Home, Users, Calendar, DollarSign, 
+  BarChart3, Scissors, UserCircle, ChevronDown, ChevronRight, Power, X
 } from 'lucide-react';
 import './Sidebar.css';
 
@@ -21,7 +21,7 @@ const Sidebar = ({ activeSection, setActiveSection, onLogout, onSwitchMode, isOp
   };
 
   const mainItems = [
-    { id: 'dashboard', label: 'Home', icon: <LayoutDashboard size={18} /> },
+    { id: 'dashboard', label: 'Home', icon: <Home size={18} /> },
     { id: 'payment', label: 'Sales', icon: <DollarSign size={18} /> },
     { 
       id: 'appointments-group', 

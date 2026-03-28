@@ -420,6 +420,7 @@
   height: 32px;
   width: 80px;
   margin-right: -4px;
+  min-width: 0;
 }
 
 @keyframes slideInUp {

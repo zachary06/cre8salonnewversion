@@ -11,6 +11,8 @@ import DataExport from './features/DataExport';
 import CustomerBooking from './features/CustomerBooking';
 import Login from './features/Login';
 import Topbar from './components/Topbar';
+import Notifications from './features/Notifications';
+import Profile from './features/Profile';
 import { useSalonData } from './hooks/useSalonData';
 import './App.css';
 
@@ -27,7 +29,7 @@ function App() {
     customers, appointments, services, transactions, setServices,
     addCustomer, updateCustomer, deleteCustomer, 
     addAppointment, updateAppointmentStatus, deleteAppointment, 
-    addTransaction, loadMockData
+    addTransaction, markAllNotificationsAsRead, markNotificationAsRead, clearNotification, notifications, loadMockData
   } = useSalonData();
 
   React.useEffect(() => {
@@ -79,57 +81,6 @@ function App() {
     );
   }
 
-  const renderContent = () => {
-    switch (activeSection) {
-      case 'dashboard':
-        return (
-          <Dashboard 
-            appointments={appointments} 
-            customers={customers} 
-            services={services} 
-            transactions={transactions}
-            setActiveSection={setActiveSection} 
-          />
-        );
-      case 'customers':
-        return <Customers customers={customers} addCustomer={addCustomer} updateCustomer={updateCustomer} deleteCustomer={deleteCustomer} loadMockData={loadMockData} />;
-      case 'calendar-view':
-        return <CalendarView appointments={appointments} />;
-      case 'appointments':
-        return (
-          <Appointments 
-            appointments={appointments} 
-            customers={customers} 
-            services={services} 
-            addAppointment={addAppointment} 
-            updateAppointmentStatus={updateAppointmentStatus} 
-            deleteAppointment={deleteAppointment}
-            setActiveSection={setActiveSection}
-            loadMockData={loadMockData}
-          />
-        );
-      case 'payment':
-        return (
-          <Payment 
-            appointments={appointments} 
-            customers={customers} 
-            transactions={transactions} 
-            addTransaction={addTransaction} 
-            setActiveSection={setActiveSection}
-            loadMockData={loadMockData} 
-          />
-        );
-      case 'reports':
-        return <Reports appointments={appointments} transactions={transactions} services={services} />;
-      case 'services':
-        return <Services services={services} setServices={setServices} />;
-      case 'export':
-        return <DataExport customers={customers} appointments={appointments} transactions={transactions} />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <div className="flex">
       <Sidebar 
@@ -150,6 +101,9 @@ function App() {
           onMenuToggle={handleToggleSidebar}
           activeSection={activeSection}
           searchTerm={searchTerm}
+          notifications={notifications}
+          markAllRead={markAllNotificationsAsRead}
+          setActiveSection={setActiveSection}
         />
         <div className="page-content">
           {activeSection === 'dashboard' && (
@@ -191,7 +145,6 @@ function App() {
               customers={customers} 
               transactions={transactions} 
               addTransaction={addTransaction} 
-              setActiveSection={setActiveSection}
               loadMockData={loadMockData} 
             />
           )}
@@ -203,7 +156,23 @@ function App() {
               searchTerm={searchTerm}
             />
           )}
-          {activeSection === 'export' && <DataExport customers={customers} appointments={appointments} transactions={transactions} />}
+          {activeSection === 'export' && <DataExport customers={customers} appointments={appointments} />}
+          {activeSection === 'notifications' && (
+            <Notifications 
+              notifications={notifications} 
+              markRead={markNotificationAsRead}
+              markAllRead={markAllNotificationsAsRead}
+              clearNotification={clearNotification}
+              searchTerm={searchTerm}
+            />
+          )}
+          {activeSection === 'profile' && (
+            <Profile 
+              currentUser={currentUser} 
+              setCurrentUser={setCurrentUser}
+              onLogout={handleLogout}
+            />
+          )}
         </div>
       </div>
     </div>

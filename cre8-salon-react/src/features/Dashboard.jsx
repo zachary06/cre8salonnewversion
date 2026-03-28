@@ -9,7 +9,7 @@ import {
   Tooltip, ResponsiveContainer 
 } from 'recharts';
 import { useSalonData } from '../hooks/useSalonData';
-import { getServiceImage } from './Services';
+import { getServiceImage } from '../utils/formatters';
 import './Dashboard.css';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -165,7 +165,7 @@ const Dashboard = ({ setActiveSection }) => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  const renderDropdown = (id, options, onSelect) => (
+  const renderDropdown = (options, onSelect) => (
     <div className="dashboard-dropdown">
       {options.map(opt => (
         <div key={opt} className="dropdown-item" onClick={() => {
@@ -180,7 +180,7 @@ const Dashboard = ({ setActiveSection }) => {
     </div>
   );
 
-  const renderIconMenu = (id) => (
+  const renderIconMenu = () => (
     <div className="dashboard-dropdown icon-menu">
       <div className="dropdown-item"><Eye size={14} /> View Details</div>
       <div className="dropdown-item"><Download size={14} /> Download Report</div>
@@ -191,18 +191,16 @@ const Dashboard = ({ setActiveSection }) => {
 
   const renderSparkline = (data, color) => (
     <div className="sparkline-container">
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data}>
-          <Area 
-            type="monotone" 
-            dataKey="v" 
-            stroke={color} 
-            fill={color} 
-            fillOpacity={0.15} 
-            strokeWidth={2}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
+      <AreaChart width={80} height={32} data={data}>
+        <Area 
+          type="monotone" 
+          dataKey="v" 
+          stroke={color} 
+          fill={color} 
+          fillOpacity={0.15} 
+          strokeWidth={2}
+        />
+      </AreaChart>
     </div>
   );
 
@@ -247,8 +245,8 @@ const Dashboard = ({ setActiveSection }) => {
               {showTimeframeDropdown && renderDropdown('timeframe', ['Weekly', 'Monthly', 'Yearly'], setTimeframe)}
             </div>
           </div>
-          <div style={{ width: '100%', height: 300, position: 'relative' }}>
-            <ResponsiveContainer>
+          <div style={{ width: '100%', height: 300, position: 'relative', minWidth: 0 }}>
+            <ResponsiveContainer minWidth={0}>
               <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
@@ -341,7 +339,7 @@ const Dashboard = ({ setActiveSection }) => {
           </div>
           
           <div className="activity-list">
-            {services.slice(0, 5).map((service, idx) => {
+            {services.slice(0, 6).map((service, idx) => {
               const colors = ['#7c3aed', '#10b981', '#ef4444', '#f59e0b', '#4f46e5', '#ec4899', '#06b6d4'];
               const color = colors[idx % colors.length];
               return (

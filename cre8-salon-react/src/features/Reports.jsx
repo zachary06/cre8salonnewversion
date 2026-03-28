@@ -1,33 +1,16 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { 
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   AreaChart, Area, PieChart, Pie, Cell
 } from 'recharts';
 import { TrendingUp, ChevronDown, ArrowUpRight, Calendar, Scissors, DollarSign } from 'lucide-react';
+import { getServiceImage } from '../utils/formatters';
 import './Reports.css';
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-const getServiceImage = (name) => {
-  const n = (name || '').toLowerCase();
-  if (n.includes('hair') && (n.includes('cut') || n.includes('trim') || n.includes('style')))
-    return 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=100&q=80';
-  if (n.includes('color') || n.includes('dye') || n.includes('highlight'))
-    return 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=100&q=80';
-  if (n.includes('facial') || n.includes('face') || n.includes('skin'))
-    return 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=100&q=80';
-  if (n.includes('massage') || n.includes('spa'))
-    return 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=100&q=80';
-  if (n.includes('nail') || n.includes('mani') || n.includes('pedi'))
-    return 'https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=100&q=80';
-  if (n.includes('wax') || n.includes('brow'))
-    return 'https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?auto=format&fit=crop&w=100&q=80';
-  if (n.includes('lash') || n.includes('eyelash'))
-    return 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&w=100&q=80';
-  if (n.includes('makeup'))
-    return 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=100&q=80';
-  return 'https://images.unsplash.com/photo-1600948836101-f9ffda59d250?auto=format&fit=crop&w=100&q=80';
-};
+// Redundant getServiceImage removed (now using shared utility)
+
 
 // Reusable filter dropdown
 const FilterDropdown = ({ options, value, onChange }) => {
@@ -67,9 +50,8 @@ const Reports = ({ appointments = [], transactions = [], services = [] }) => {
   const pendingApts = appointments.filter(a => a.status !== 'Done' && a.status !== 'Paid' && a.status !== 'Cancelled').length;
 
   // --- Build month-bucket data from appointments ---
-  const buildMonthData = (period) => {
+  const buildMonthData = useCallback((period) => {
     if (period === 'Yearly') {
-      // Group by year
       const years = {};
       appointments.forEach(a => {
         const y = a.date?.split('-')[0] || '?';
@@ -78,10 +60,10 @@ const Reports = ({ appointments = [], transactions = [], services = [] }) => {
       return Object.entries(years).map(([name, value]) => ({ name, value: Math.round(value) }));
     }
     if (period === 'Weekly') {
-      // Last 7 days
       const result = [];
+      const today = new Date();
       for (let i = 6; i >= 0; i--) {
-        const d = new Date(); d.setDate(d.getDate() - i);
+        const d = new Date(today); d.setDate(today.getDate() - i);
         const key = d.toISOString().split('T')[0];
         const day = d.toLocaleDateString('en-US', { weekday: 'short' });
         const val = appointments.filter(a => a.date === key).reduce((s, a) => s + (a.totalPrice || 0), 0);
@@ -89,7 +71,6 @@ const Reports = ({ appointments = [], transactions = [], services = [] }) => {
       }
       return result;
     }
-    // Monthly — group by month across all data
     const monthMap = {};
     MONTHS.forEach(m => monthMap[m] = 0);
     appointments.forEach(a => {
@@ -97,12 +78,12 @@ const Reports = ({ appointments = [], transactions = [], services = [] }) => {
       monthMap[MONTHS[monthIdx]] += (a.totalPrice || 0);
     });
     return MONTHS.map(m => ({ name: m, value: Math.round(monthMap[m]) })).filter(d => d.value > 0 || MONTHS.indexOf(d.name) <= new Date().getMonth());
-  };
+  }, [appointments]);
 
-  const salesChartData = useMemo(() => buildMonthData(salesPeriod), [appointments, salesPeriod]);
+  const salesChartData = useMemo(() => buildMonthData(salesPeriod), [buildMonthData, salesPeriod]);
 
   // Bar chart: appointment counts by period
-  const buildBarData = (period) => {
+  const buildBarData = useCallback((period) => {
     if (period === 'Yearly') {
       const years = {};
       appointments.forEach(a => { const y = a.date?.split('-')[0] || '?'; years[y] = (years[y] || 0) + 1; });
@@ -110,8 +91,9 @@ const Reports = ({ appointments = [], transactions = [], services = [] }) => {
     }
     if (period === 'Weekly') {
       const result = [];
+      const today = new Date();
       for (let i = 6; i >= 0; i--) {
-        const d = new Date(); d.setDate(d.getDate() - i);
+        const d = new Date(today); d.setDate(today.getDate() - i);
         const key = d.toISOString().split('T')[0];
         const day = d.toLocaleDateString('en-US', { weekday: 'short' });
         result.push({ name: day, value: appointments.filter(a => a.date === key).length });
@@ -125,9 +107,9 @@ const Reports = ({ appointments = [], transactions = [], services = [] }) => {
       monthMap[MONTHS[monthIdx]] += 1;
     });
     return MONTHS.map(m => ({ name: m, value: monthMap[m] })).filter((_, i) => i <= new Date().getMonth());
-  };
+  }, [appointments]);
 
-  const barChartData = useMemo(() => buildBarData(clientPeriod), [appointments, clientPeriod]);
+  const barChartData = useMemo(() => buildBarData(clientPeriod), [buildBarData, clientPeriod]);
 
   // Pie chart: appointment statuses
   const pieData = useMemo(() => [
@@ -249,8 +231,8 @@ const Reports = ({ appointments = [], transactions = [], services = [] }) => {
             <h3 className="card-title">Total Sales Overview</h3>
             <FilterDropdown options={periodOptions} value={salesPeriod} onChange={setSalesPeriod} />
           </div>
-          <div className="chart-container" style={{ width: '100%', height: 260 }}>
-            <ResponsiveContainer>
+          <div className="chart-container" style={{ width: '100%', height: 260, minWidth: 0 }}>
+            <ResponsiveContainer minWidth={0}>
               <AreaChart data={salesChartData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorOverview" x1="0" y1="0" x2="0" y2="1">
@@ -282,8 +264,8 @@ const Reports = ({ appointments = [], transactions = [], services = [] }) => {
             <h3 className="card-title">Appointments Over Time</h3>
             <FilterDropdown options={periodOptions} value={clientPeriod} onChange={setClientPeriod} />
           </div>
-          <div style={{ width: '100%', height: 260 }}>
-            <ResponsiveContainer>
+          <div style={{ width: '100%', height: 260, minWidth: 0 }}>
+            <ResponsiveContainer minWidth={0}>
               <BarChart data={barChartData} margin={{ top: 20, right: 10, left: -20, bottom: 0 }}>
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 12 }} dy={10} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--text-muted)', fontSize: 12 }} />
@@ -306,8 +288,8 @@ const Reports = ({ appointments = [], transactions = [], services = [] }) => {
             <FilterDropdown options={periodOptions} value={aptPeriod} onChange={setAptPeriod} />
           </div>
           <div className="donut-content">
-            <div className="donut-chart-wrapper" style={{ width: '220px', height: '220px' }}>
-              <ResponsiveContainer>
+            <div className="donut-chart-wrapper" style={{ width: '220px', height: '220px', minWidth: 0 }}>
+              <ResponsiveContainer minWidth={0}>
                 <PieChart>
                   <Tooltip 
                     contentStyle={{ backgroundColor: 'var(--bg-card)', borderColor: 'var(--border)', borderRadius: '8px', color: 'var(--text-main)' }}

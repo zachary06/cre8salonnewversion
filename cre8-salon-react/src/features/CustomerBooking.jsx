@@ -5,25 +5,11 @@ import {
 } from 'lucide-react';
 import './Login.css';
 import './CustomerBooking.css';
-import { format12h } from '../utils/formatters';
+import { format12h, getServiceImage } from '../utils/formatters';
 import { useForm } from '../hooks/useForm';
 
-const getServiceImage = (name) => {
-  const n = name.toLowerCase();
-  if (n.includes('haircut') || n.includes('styling') || n.includes('hair') || n.includes('barber')) 
-    return "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=500&q=80";
-  if (n.includes('color') || n.includes('dye') || n.includes('tint')) 
-    return "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=500&q=80";
-  if (n.includes('spa') || n.includes('massage') || n.includes('therapy') || n.includes('scrub')) 
-    return "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=500&q=80";
-  if (n.includes('manicure') || n.includes('nail') || n.includes('gel')) 
-    return "https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=500&q=80";
-  if (n.includes('pedicure')) 
-    return "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=500&q=80";
-  if (n.includes('facial') || n.includes('skin') || n.includes('cleanse') || n.includes('peel')) 
-    return "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=500&q=80";
-  return "https://images.unsplash.com/photo-1512496030580-37a41413ee4b?auto=format&fit=crop&w=500&q=80";
-};
+// Redundant getServiceImage removed (now using shared utility)
+
 
 const CustomDatePicker = ({ value, onChange, isOpen, onOpen, onClose }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date(value || new Date()));
@@ -211,30 +197,37 @@ const CustomerBooking = ({ services, addAppointment, customers, addCustomer, app
               <p>Enter your contact details.</p>
             </div>
             <div className="cb-form-group">
-              <label>Full Name <span className="required">*</span></label>
+              <label htmlFor="cb-name">Full Name <span className="required">*</span></label>
               <input
+                id="cb-name"
                 name="name"
                 placeholder="Your full name"
                 value={formData.name}
                 onChange={handleChange}
+                autoComplete="name"
+                required
               />
             </div>
             <div className="cb-form-group">
-              <label>Contact Number <span className="optional">(Optional)</span></label>
+              <label htmlFor="cb-contact">Contact Number <span className="optional">(Optional)</span></label>
               <input
+                id="cb-contact"
                 name="contact"
                 placeholder="Phone number"
                 value={formData.contact}
                 onChange={handleChange}
+                autoComplete="tel"
               />
             </div>
             <div className="cb-form-group">
-              <label>Email Address <span className="optional">(Optional)</span></label>
+              <label htmlFor="cb-email">Email Address <span className="optional">(Optional)</span></label>
               <input
+                id="cb-email"
                 name="email"
                 placeholder="Email address"
                 value={formData.email}
                 onChange={handleChange}
+                autoComplete="email"
               />
             </div>
           </div>
@@ -282,8 +275,9 @@ const CustomerBooking = ({ services, addAppointment, customers, addCustomer, app
               <p>Pick a visit schedule.</p>
             </div>
             <div className="cb-form-group">
-              <label>Preferred Date</label>
+              <label htmlFor="cb-date">Preferred Date</label>
               <CustomDatePicker 
+                id="cb-date"
                 value={formData.date}
                 onChange={e => setFormData({...formData, date: e.target.value})}
                 isOpen={openPicker === 'date'}

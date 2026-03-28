@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Download, FileText, Share2, Printer, CheckCircle2 } from 'lucide-react';
 import './DataExport.css';
 
-const DataExport = ({ customers, appointments, transactions }) => {
+const DataExport = ({ customers, appointments }) => {
   const [exporting, setExporting] = useState(null);
 
   const downloadCSV = (data, filename) => {

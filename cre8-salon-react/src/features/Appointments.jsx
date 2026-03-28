@@ -498,7 +498,7 @@ const CustomSelectDropdown = ({ customers, value, onChange }) => {
       </div>
 
       <PortalDropdown triggerRef={triggerRef} isOpen={open} onClose={() => setOpen(false)}>
-        <div ref={panelRef} className="custom-select-panel" style={{ width: triggerRef.current?.offsetWidth }}>
+        <div ref={panelRef} className="custom-select-panel" style={{ width: '100%' }}>
           <div className="custom-select-search">
             <Search size={14} />
             <input
@@ -606,16 +606,18 @@ const AppointmentModal = ({ isOpen, onClose, customers, services, appointments, 
           )}
           <div className="form-grid">
             <div className="form-group col-span-full">
-              <label>Select Customer</label>
+              <label htmlFor="apt-customer">Select Customer</label>
               <CustomSelectDropdown
+                id="apt-customer"
                 customers={customers}
                 value={formData.customerId}
                 onChange={(id) => setFormData({ ...formData, customerId: id })}
               />
             </div>
             <div className="form-group">
-              <label>Date</label>
+              <label htmlFor="apt-date">Date</label>
               <CustomDatePicker 
+                id="apt-date"
                 value={formData.date}
                 onChange={handleDateChange}
                 isOpen={openPicker === 'date'}
@@ -624,8 +626,9 @@ const AppointmentModal = ({ isOpen, onClose, customers, services, appointments, 
               />
             </div>
             <div className="form-group">
-              <label>Time</label>
+              <label htmlFor="apt-time">Time</label>
               <CustomTimePicker 
+                id="apt-time"
                 value={formData.time}
                 onChange={handleTimeChange}
                 isOpen={openPicker === 'time'}
